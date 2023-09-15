@@ -17,15 +17,24 @@ export class ListarPage implements OnInit {
     }
   ]
 
-  constructor(private bd: BdserviceService) { }
+  constructor(private bd: BdserviceService, private router: Router) { }
 
 
   modificar(x: any){
-
+    let navigationExtras: NavigationExtras = {
+      state:{
+        idEnviado: x.id,
+        tituloEnviado: x.titulo,
+        textoEnviado: x.texto
+      }
+    }
+    this.router.navigate(['/modificar'], navigationExtras);
   }
 
   eliminar(x:any){
     this.bd.eliminarNoticia(x.id);
+    //Hacer las alertas en un servicio y llamarla
+    this.bd.presentAlert('Noticia Eliminada')
   }
 
   ngOnInit() {
@@ -37,8 +46,6 @@ export class ListarPage implements OnInit {
         })
       }
     })
-    
-
   }
 
   

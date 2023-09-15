@@ -16,6 +16,12 @@ export class AgregarPage implements OnInit {
   ngOnInit() {
   }
 
+  insertar(){
+    this.db.insertarNoticia(this.tituloNoticia, this.textoNoticia);
+    this.db.presentAlert('Noticia Agregada');
+    this.router.navigate(['/listar']);
+  }
+
   
 
 }
