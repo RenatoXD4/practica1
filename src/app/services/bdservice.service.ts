@@ -44,6 +44,44 @@ export class BdserviceService {
     return this.listaNoticia.asObservable();
   }
 
+  buscarNoticia(){
+    return this.dataBase.executeSql('SELECT * FROM NOTICIA', []).then((res) =>{
+       //Variable para almacenar el resulado
+       let items: Noticia[] = [];
+       //Verificar la cantidad de registros
+       if(res.rows.length > 0){
+        //Agregar registro a registro en mi variable 
+        for (let i = 0; i < res.rows.length; i++) {
+          items.push({
+            id: res.rows.item(i).id,
+            titulo: res.rows.item(i).titulo,
+            texto: res.rows.item(i).texto
+          });
+         }
+       }
+       //Actualizar el observable
+       this.listaNoticia.next(items as any);
+    })
+  }
+
+  insertarNoticia(titulo: any, texto: any){
+    return this.dataBase.executeSql('INSERT INTO noticia(titulo,texto) VALUES(?, ?);', [titulo, texto]).then((res) =>{
+        this.buscarNoticia();
+    })
+  }
+
+  actualizarNoticia(id:any, titulo:any, texto:any){
+    return this.dataBase.executeSql('UPDATE noticia SET titulo = ?, texto = ?, WHERE ID = ?;', [titulo, texto, id]).then((res) =>{
+      this.buscarNoticia();
+    })
+  }
+
+  eliminarNoticia(id: any){
+     return this.dataBase.executeSql('DELETE FROM noticia WHERE id = ?;', [id]).then((res) =>{
+      this.buscarNoticia();
+     })
+  }
+
   crearBD(){
     //Verificar es el platform
     this.platform.ready().then(()=>{
@@ -65,19 +103,19 @@ export class BdserviceService {
 
   async crearTablas(){
     try{
-      //Ejecutar la ejecución de tablas
+      //Ejecutar la creación de tablas
       await this.dataBase.executeSql(this.tablaNoticia, []);
 
       //Ejecutar los insert
       await this.dataBase.executeSql(this.insert, []);
 
       //Cambiar observable
-
       this.isDBReady.next(true)
+      this.buscarNoticia();
 
 
     }catch(err){
-      this.presentAlert("Error en la creación de la base de datos: " + err);
+      this.presentAlert("Error en crearTabla: " + err);
     }
 
   }
