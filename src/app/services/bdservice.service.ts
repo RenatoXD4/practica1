@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { Platform } from '@ionic/angular';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AlertController } from '@ionic/angular';
+import { Noticia } from './noticia';
 
 
 @Injectable({
@@ -31,6 +32,16 @@ export class BdserviceService {
   
   constructor(public sqlite: SQLite, private platform: Platform, private alertController: AlertController) { 
     this.crearBD();
+  }
+
+
+  //Función para retornar los observables
+  bdState(){
+    return this.isDBReady.asObservable();
+  }
+
+  fetchNoticias(): Observable<Noticia[]>{
+    return this.listaNoticia.asObservable();
   }
 
   crearBD(){
