@@ -71,7 +71,7 @@ export class BdserviceService {
   }
 
   actualizarNoticia(id:any, titulo:any, texto:any){
-    return this.dataBase.executeSql('UPDATE noticia SET titulo = ?, texto = ?, WHERE ID = ?;', [titulo, texto, id]).then((res) =>{
+    return this.dataBase.executeSql('UPDATE noticia SET titulo = ?, texto = ? WHERE ID = ?;', [titulo, texto, id]).then((res) =>{
       this.buscarNoticia();
     })
   }
