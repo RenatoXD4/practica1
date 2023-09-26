@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiserviceService } from 'src/app/services/apiservice.service';
 
 @Component({
   selector: 'app-apiexterna',
@@ -8,9 +9,18 @@ import { Component, OnInit } from '@angular/core';
 export class ApiexternaPage implements OnInit {
   users:any;
   user:any;
-  constructor() { }
+  constructor(private api: ApiserviceService) { }
 
   ngOnInit() {
   }
-
+  obtenerUsuarios(){
+    this.api.getUsuarios().subscribe((data)=>{
+      this.users = data;
+    })
+  }
+  
+  ionViewWillEnter(){
+    this.obtenerUsuarios();
+  }
 }
+
